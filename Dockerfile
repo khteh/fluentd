@@ -1,5 +1,5 @@
 FROM ubuntu:18.10
-MAINTAINER Kok How, Teh <kokhow.teh@taiger.io>
+MAINTAINER Kok How, Teh <funcoolgeeek@gmail.com>
 RUN apt update -y
 RUN ulimit -n 65536
 RUN apt install -y curl gnupg2 sudo
