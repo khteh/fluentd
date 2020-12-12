@@ -1,4 +1,4 @@
-FROM ubuntu:19.04
+FROM ubuntu:21.04
 MAINTAINER Kok How, Teh <funcoolgeeek@gmail.com>
 RUN apt update -y
 RUN ulimit -n 65536
