@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.10
 MAINTAINER Kok How, Teh <funcoolgeeek@gmail.com>
 RUN apt update -y
 RUN ulimit -n 65536
