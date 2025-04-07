@@ -4,15 +4,17 @@ fluentd container dockerfile deployed as sidecar in kubernetes cluster to ingest
 
 ## Configuration Validation
 
-To validate fluentd configuration against specific input string, add `@type dummy` into the configuration file:
+To validate fluentd configuration against specific input string, add `@type sample` into the configuration file:
+
+- https://docs.fluentd.org/input/sample
 
 ```
 <source>
-  @type dummy
-  dummy [{"access_log": "[2025-04-04 08:44:16 +0000] [10] [INFO] 192.168.0.149:43472 - - [04/Apr/2025:08:44:16 +0000] \"GET /health/live 2\" 200 2 \"-\" \"kube-probe/1.27\""}]
-  tag dummy
+  @type sample
+  sample [{"access_log": "[2025-04-04 08:44:16 +0000] [10] [INFO] 192.168.0.149:43472 - - [04/Apr/2025:08:44:16 +0000] \"GET /health/live 2\" 200 2 \"-\" \"kube-probe/1.27\""}]
+  tag access_log_sample
 </source>
-<filter dummy>
+<filter access_log_sample>
   @type parser
   key_name access_log
   reserve_data true
@@ -24,17 +26,17 @@ To validate fluentd configuration against specific input string, add `@type dumm
   reserve_time true
   <parse>
     @type regexp
-    expression /^[(?<time>.+?)]\s+[\d{2}]\s+[(?<level>\w+)]\s+(?<ip>[^ ]*)\s+\"(?<method>[A-Z]*) (?<url>[^ ]*)\"\s+(?<code>[^ ]*)\s+(?<size>[^ ]*)\s+(?<duration>[^ ]*)(?<message>.*)$/
+      expression /^(?<time>.+?) (?<level>\w{0,8}) (?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>(?:[^\"]|\\.)*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>(?:[^\"]|\\.)*)" "(?<agent>(?:[^\"]|\\.)*)")$/
   </parse>
 </filter>
 <source>
-  @type dummy
-  dummy [{"python_log": "2025-04-04 05:16:07 INFO     Running app..."}]
-  tag dummy
+  @type sample
+  sample [{"hypercorn": "2025-04-04 05:16:07 INFO     Running app..."}]
+  tag hypercorn_sample
 </source>
-<filter dummy>
+<filter hypercorn_sample>
   @type parser
-  key_name python_log
+  key_name hypercorn
   reserve_data true
   time_type string
   time_format %Y-%m-%d %H:%M:%S
@@ -44,7 +46,7 @@ To validate fluentd configuration against specific input string, add `@type dumm
   reserve_time true
   <parse>
     @type regexp
-    expression /^(?<time>.+?)\s+(?<level>\w+)\s+(?<message>.*)$/
+    expression /^(?<time>.+?) (?<level>\w{0,8}) (?<message>.*)$/
   </parse>
 </filter>
 ```
