@@ -31,7 +31,7 @@ To validate fluentd configuration against specific input string, add `@type samp
 </filter>
 <source>
   @type sample
-  sample [{"hypercorn": "2025-04-04 05:16:07 INFO     Running app..."}]
+  sample [{"hypercorn":"[2025-04-06 10:50:12 +0000] [10] [INFO] Running on https://0.0.0.0:443 (QUIC) (CTRL + C to quit)"}]
   tag hypercorn_sample
 </source>
 <filter hypercorn_sample>
