@@ -18,15 +18,15 @@ To validate fluentd configuration against specific input string, add `@type samp
   @type parser
   key_name access_log
   reserve_data true
-  time_type string
-  time_format %Y-%m-%d %H:%M:%S
-  keep_time_key true
   # even if we failed to parse the time send the record over to splunk
   emit_invalid_record_to_error false
   reserve_time true
   <parse>
     @type regexp
-      expression /^(?<time>.+?) (?<level>\w{0,8}) (?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>(?:[^\"]|\\.)*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>(?:[^\"]|\\.)*)" "(?<agent>(?:[^\"]|\\.)*)")$/
+    time_type string
+    time_format %Y-%m-%d %H:%M:%S
+    keep_time_key true
+    expression /^(?<time>.+?) (?<level>\w{0,8}) (?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>(?:[^\"]|\\.)*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>(?:[^\"]|\\.)*)" "(?<agent>(?:[^\"]|\\.)*)")$/
   </parse>
 </filter>
 <source>
@@ -38,14 +38,14 @@ To validate fluentd configuration against specific input string, add `@type samp
   @type parser
   key_name hypercorn
   reserve_data true
-  time_type string
-  time_format %Y-%m-%d %H:%M:%S
-  keep_time_key true
   # even if we failed to parse the time send the record over to splunk
   emit_invalid_record_to_error false
   reserve_time true
   <parse>
     @type regexp
+    time_type string
+    time_format %Y-%m-%d %H:%M:%S
+    keep_time_key true
     expression /^(?<time>.+?) (?<level>\w{0,8}) (?<message>.*)$/
   </parse>
 </filter>
