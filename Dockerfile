@@ -1,4 +1,4 @@
-FROM ubuntu:25.10
+FROM ubuntu:26.04
 LABEL org.opencontainers.image.authors="Kok How, Teh <funcoolgeeek@gmail.com>"
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -y
