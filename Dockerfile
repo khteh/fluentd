@@ -1,10 +1,22 @@
-FROM ubuntu:26.04
+FROM fluent/fluentd:v1.19-debian
 LABEL org.opencontainers.image.authors="Kok How, Teh <funcoolgeeek@gmail.com>"
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt update -y
-RUN ulimit -n 65536
-RUN apt install -y curl gnupg2 sudo build-essential libgeoip-dev automake autoconf libtool
-# https://docs.fluentd.org/installation/install-fluent-package/install-by-deb-fluent-package
-RUN curl -fsSL https://fluentd.cdn.cncf.io/sh/install-ubuntu-noble-fluent-package6.sh | sh
-RUN /usr/sbin/fluent-gem install fluent-plugin-elasticsearch fluent-plugin-geoip fluent-plugin-filter_typecast fluent-plugin-fields-autotype
-CMD ["fluentd"]
+# https://github.com/fluent/fluentd-docker-image/blob/master/HOWTOBUILD.md
+# Use root account to use apt
+USER root
+# below RUN includes plugin as examples elasticsearch is not required
+# you may customize including plugins as you wish
+RUN buildDeps="sudo make gcc g++ libc-dev libmaxminddb-dev libgeoip-dev" \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends libmaxminddb0 libgeoip1t64 $buildDeps \
+ && sudo gem install fluent-plugin-elasticsearch fluent-plugin-geoip fluent-plugin-filter_typecast fluent-plugin-fields-autotype \
+ && sudo gem sources --clear-all \
+ && SUDO_FORCE_REMOVE=yes \
+    apt-get purge -y --auto-remove \
+                  -o APT::AutoRemove::RecommendsImportant=false \
+                  $buildDeps \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
+#RUN /usr/sbin/fluent-gem install fluent-plugin-elasticsearch fluent-plugin-geoip fluent-plugin-filter_typecast fluent-plugin-fields-autotype
+COPY fluent.conf /fluentd/etc/
+COPY entrypoint.sh /bin/
+USER fluent
