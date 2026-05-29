@@ -19,5 +19,5 @@ RUN buildDeps="sudo make gcc g++ libc-dev libmaxminddb-dev libgeoip-dev" \
 #RUN /usr/sbin/fluent-gem install fluent-plugin-elasticsearch fluent-plugin-geoip fluent-plugin-filter_typecast fluent-plugin-fields-autotype
 #COPY fluent.conf /fluentd/etc/
 COPY entrypoint.sh /bin/
-RUN mkdir -p /var/log/td-agent/pos && chown -R fluent:fluent /var/log/td-agent
+RUN mkdir -p /var/log/fluentd/pos && chown -R fluent:fluent /var/log/fluentd
 USER fluent
