@@ -4,7 +4,7 @@ fluentd container dockerfile deployed as sidecar in kubernetes cluster to ingest
 
 ## Configuration Validation
 
-To validate fluentd configuration against specific input string, add `@type sample` into the configuration file:
+- To validate fluentd configuration against specific input string, add `@type sample` into the configuration file:
 
 - https://docs.fluentd.org/input/sample
 
@@ -51,8 +51,10 @@ To validate fluentd configuration against specific input string, add `@type samp
 </filter>
 ```
 
-Then, check the configuration:
+- Save the file with `.conf` extension and run it to see if the configuration works as expected.
 
 ```
-$ fluentd -c /etc/fluent/fluentd.conf --dry-run
+$ fluentd -c /samples/myapp.conf --dry-run
 ```
+
+- `--dry-run` only checks that the config parses. It doesn't start the source, so it never shows what the filter drops.
